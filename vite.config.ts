@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-        base: '/project_nukuenco/', // CHANGE THIS: Set
+        base: '/', // CHANGE THIS: Set
       server: {
         port: 3000,
         host: '0.0.0.0',
