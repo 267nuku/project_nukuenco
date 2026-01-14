@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Nukuenco Atelier",
+  "description": "A luxury-inspired fashion boutique website for beginners, featuring minimalist design and an AI-powered styling assistant.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
