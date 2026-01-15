@@ -412,7 +412,7 @@ const App: React.FC = () => {
             </div>
             
             <div className="max-w-3xl w-full mb-20 relative">
-              <input type="text" value={dreamInput} onChange={(e) => setDreamInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleGenerateDream()} placeholder="영감의 단어들을 나열해 주세요" className="w-full bg-transparent border-b border-white/10 py-8 text-2xl md:text-4xl font-serif italic text-white outline-none focus:border-[#E35205] transition-all text-center placeholder:text-white/5" />
+              <input type="text" value={dreamInput} onChange={(e) => setDreamInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && handleGenerateDream()} placeholder="행복한 꿈을 입력하세요" className="w-full bg-transparent border-b border-white/10 py-8 text-2xl md:text-4xl font-serif italic text-[#FFD700] outline-none focus:border-[#E35205] transition-all text-center placeholder:text-[#FFD700]" />
               <button onClick={handleGenerateDream} disabled={isDreamLoading} className={`mt-12 mx-auto block px-16 py-6 bg-white text-black text-[10px] font-bold uppercase tracking-[0.5em] hover:bg-[#E35205] hover:text-white transition-all ${isDreamLoading ? 'opacity-30' : 'cursor-pointer'}`}>
                 {isDreamLoading ? 'DEVELOPING...' : '마스터피스 현상하기'}
               </button>
