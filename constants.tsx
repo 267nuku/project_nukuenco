@@ -71,7 +71,7 @@ export const PRODUCTS: Product[] = [
     id: 'p6_realm_of_nuku',
     name: 'The Realm of NUKU : The First Manifestation',
     subtitle: '누쿠앤코 오리지널 실크 스카프 - 상상의 정원',
-    price: '₩ 298,000',
+    price: '₩ 288,888',
     category: 'Silk Scarf',
     image: 'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/%EC%8A%A4%EC%B9%B4%ED%94%84%EC%97%AC%EC%9D%B8.jpg',
     detailImages: [
