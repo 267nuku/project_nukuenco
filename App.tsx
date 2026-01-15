@@ -403,7 +403,7 @@ const App: React.FC = () => {
           <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
             <div className="text-center mb-24">
               <span className="text-[#E35205] text-[11px] tracking-[1.5em] font-bold uppercase block mb-4">Dream Atelier</span>
-              <h2 className="font-serif text-5xl md:text-8xl mb-8">현상의 아틀리에</h2>
+              <h2 className="font-serif text-5xl md:text-8xl mb-8">상상과행복 아틀리에</h2>
               <div className="flex flex-wrap justify-center gap-4 mt-6">
                 {["Cinematic 35mm", "Mandarin Glow", "Minimal Narrative", "Editorial Textures"].map(tag => (
                    <span key={tag} className="text-[8px] tracking-[0.3em] border border-white/20 px-3 py-1 uppercase opacity-40 hover:opacity-100 transition-opacity cursor-default">{tag}</span>
