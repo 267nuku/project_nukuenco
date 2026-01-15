@@ -300,7 +300,7 @@ const App: React.FC = () => {
                 <div className="space-y-10">
                   <p className="text-gray-500 font-serif italic text-lg md:text-2xl leading-relaxed max-w-3xl">
                     "남들의 시선보다 중요한 건 오늘 내가 나를 얼마나 귀하게 대접했는가입니다. <br/>
-                    당신의 취향이 머무는 모든 순간이 나를 사랑하는 가장 멋진 의식이 되기를."
+                    당신의 취향이 머무는 모든 순간이 나를 사랑하는 가장 멋진 의식이 되기를."누쿠앤코가 응원합니다
                   </p>
                 </div>
               </div>
