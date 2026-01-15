@@ -2,7 +2,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 // Use the system-provided API key directly
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getAI = () => new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 export const getFashionAdvice = async (userMessage: string, imageBase64?: string, isDirector: boolean = true) => {
   const ai = getAI();

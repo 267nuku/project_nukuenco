@@ -23,11 +23,10 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Create .env file
+        run: echo "VITE_GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
       - name: Build app
         run: npm run build
-        env:
-          # 설정해둔 Secret을 빌드 과정에 주입합니다
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
