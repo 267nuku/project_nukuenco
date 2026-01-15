@@ -17,6 +17,9 @@ interface AIStylistProps {
 }
 
 const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
+  // GitHub Secrets 또는 환경 변수에서 API 키 로드
+  const envApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const hasEnvKey = !!envApiKey;
   const [messages, setMessages] = useState<ExtendedChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -78,7 +81,7 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
     if (isLiveActive) { stopLiveSession(); return; }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       const sessionPromise = ai.live.connect({
@@ -153,6 +156,13 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
 
   return (
     <section id="stylist" className="py-24 px-6 bg-[#f4f2ee]">
+      {!hasEnvKey && (
+        <div className="max-w-4xl mx-auto mb-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-yellow-800 text-sm">
+            ⚠️ API 키가 설정되지 않았습니다. GitHub Secrets에 VITE_GEMINI_API_KEY를 추가하거나 환경 변수를 설정해주세요.
+          </p>
+        </div>
+      )}
       <div className="max-w-4xl mx-auto border border-[#e5e0d8] bg-white shadow-sm overflow-hidden flex flex-col h-[800px] md:h-[900px]">
         <div className="p-8 border-b border-[#e5e0d8] bg-[#fcfbf7] flex flex-col space-y-6">
           <div className="flex items-center justify-between">
