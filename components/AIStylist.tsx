@@ -77,10 +77,10 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
   const startLiveSession = async () => {
     if (isLiveActive) { stopLiveSession(); return; }
     
-    // API 키 가용성 확인
+    // API 키 가용성 확인 - 먼저 체크하여 미리 표시
     if (!isApiKeyAvailable()) {
       const status = getApiKeyStatus();
-      alert(status.message);
+      setMessages(prev => [...prev, { role: 'model', text: status.message }]);
       return;
     }
     
@@ -90,11 +90,13 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
       const ai = new GoogleGenAI({ apiKey });
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+      
+      setIsLiveActive(true);
+      
       const sessionPromise = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-12-2025',
         callbacks: {
           onopen: () => {
-            setIsLiveActive(true);
             const source = inputCtx.createMediaStreamSource(stream);
             const scriptProcessor = inputCtx.createScriptProcessor(4096, 1, 1);
             scriptProcessor.onaudioprocess = (e) => {
@@ -123,6 +125,11 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
             }
           },
           onclose: () => stopLiveSession(),
+          onerror: (error: any) => {
+            console.error("Live Session Error:", error);
+            setMessages(prev => [...prev, { role: 'model', text: '잠시 감정의 주파수에 혼선이 생겼습니다. 다시 보고드릴게요.' }]);
+            stopLiveSession();
+          },
         },
         config: {
           responseModalities: [Modality.AUDIO],
@@ -135,7 +142,11 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
         }
       });
       sessionRef.current = await sessionPromise;
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error("Live Session Connection Error:", err);
+      setMessages(prev => [...prev, { role: 'model', text: '잠시 감정의 주파수에 혼선이 생겼습니다. 다시 보고드릴게요.' }]);
+      stopLiveSession();
+    }
   };
 
   const stopLiveSession = () => { setIsLiveActive(false); sessionRef.current?.close(); sessionRef.current = null; audioContextRef.current?.close(); audioContextRef.current = null; sourcesRef.current.forEach(s => s.stop()); sourcesRef.current.clear(); };
@@ -145,10 +156,10 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
   const handleSend = async () => {
     if ((!input.trim() && !selectedImage) || isLoading) return;
     
-    // API 키 가용성 확인
+    // API 키 가용성 확인 - 미리 표시
     if (!isApiKeyAvailable()) {
       const status = getApiKeyStatus();
-      alert(status.message);
+      setMessages(prev => [...prev, { role: 'model', text: status.message }]);
       return;
     }
     
@@ -156,15 +167,26 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
     const userMsgText = input || (isDirector ? "이 감정의 조각을 해석해줘." : "누쿠앤코의 제안을 듣고 싶어요.");
     setMessages(prev => [...prev, { role: 'user', text: userMsgText, image: selectedImage || undefined }]);
     setInput(''); setSelectedImage(null); setIsLoading(true);
-    const result = await getFashionAdvice(userMsgText, base64Data, isDirector);
-    const modelMsg: ExtendedChatMessage = { role: 'model', text: result.text, sources: result.sources, isGeneratingVisual: !!result.visualPrompt };
-    setMessages(prev => [...prev, modelMsg]);
-    setIsLoading(false);
-    if (result.visualPrompt) {
-      try {
-        const visualUrl = await generateFashionImage(result.visualPrompt);
-        if (visualUrl) setMessages(prev => prev.map((m, idx) => idx === prev.length - 1 ? { ...m, generatedImage: visualUrl, isGeneratingVisual: false } : m));
-      } catch (err) { setMessages(prev => prev.map((m, idx) => idx === prev.length - 1 ? { ...m, isGeneratingVisual: false } : m)); }
+    
+    try {
+      const result = await getFashionAdvice(userMsgText, base64Data, isDirector);
+      const modelMsg: ExtendedChatMessage = { role: 'model', text: result.text, sources: result.sources, isGeneratingVisual: !!result.visualPrompt };
+      setMessages(prev => [...prev, modelMsg]);
+      setIsLoading(false);
+      
+      if (result.visualPrompt) {
+        try {
+          const visualUrl = await generateFashionImage(result.visualPrompt);
+          if (visualUrl) setMessages(prev => prev.map((m, idx) => idx === prev.length - 1 ? { ...m, generatedImage: visualUrl, isGeneratingVisual: false } : m));
+        } catch (err) { 
+          console.error("Image generation error:", err);
+          setMessages(prev => prev.map((m, idx) => idx === prev.length - 1 ? { ...m, isGeneratingVisual: false } : m)); 
+        }
+      }
+    } catch (err) {
+      console.error("Message send error:", err);
+      setMessages(prev => [...prev, { role: 'model', text: '잠시 감정의 주파수에 혼선이 생겼습니다. 다시 보고드릴게요.' }]);
+      setIsLoading(false);
     }
   };
 
