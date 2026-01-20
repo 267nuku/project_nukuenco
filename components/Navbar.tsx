@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NAV_LINKS } from '../constants';
+import { getApiKeyStatus } from '../services/geminiService';
 
 interface NavbarProps {
   isDirector: boolean;
@@ -11,11 +12,16 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isDirector, setIsDirector, isSaving }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [apiStatus, setApiStatus] = useState(getApiKeyStatus());
 
   useEffect(() => {
     const handleScroll = () => { setIsScrolled(window.scrollY > 50); };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setApiStatus(getApiKeyStatus());
   }, []);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -56,6 +62,16 @@ const Navbar: React.FC<NavbarProps> = ({ isDirector, setIsDirector, isSaving }) 
               {link.label}
             </a>
           ))}
+          {/* API Status Indicator */}
+          <div className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all duration-500 ${
+            apiStatus.available 
+              ? (isScrolled ? 'border-green-100 bg-green-50 text-green-600' : 'border-white/10 bg-white/5 text-white/60')
+              : (isScrolled ? 'border-red-100 bg-red-50 text-red-600' : 'border-red-500/20 bg-red-500/5 text-red-400')
+          }`}>
+            <div className={`w-1 h-1 rounded-full ${apiStatus.available ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`}></div>
+            <span className="text-[7px] tracking-widest font-bold uppercase">{apiStatus.available ? 'Mori Ready' : 'API Error'}</span>
+          </div>
+
           {/* Permanent Save Indicator */}
           {isDirector && (
             <div className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all duration-500 ${isScrolled ? 'border-green-100 bg-green-50 text-green-600' : 'border-white/10 bg-white/5 text-white/60'}`}>

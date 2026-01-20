@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
-import { getFashionAdvice, generateFashionImage } from '../services/geminiService';
+import { getFashionAdvice, generateFashionImage, isApiKeyAvailable, getApiKeyStatus } from '../services/geminiService';
 import { ChatMessage } from '../types';
 
 interface ExtendedChatMessage extends ChatMessage {
@@ -76,9 +76,18 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
 
   const startLiveSession = async () => {
     if (isLiveActive) { stopLiveSession(); return; }
+    
+    // API 키 가용성 확인
+    if (!isApiKeyAvailable()) {
+      const status = getApiKeyStatus();
+      alert(status.message);
+      return;
+    }
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const ai = new GoogleGenAI({ apiKey });
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       const sessionPromise = ai.live.connect({
@@ -135,6 +144,14 @@ const AIStylist: React.FC<AIStylistProps> = ({ isDirector, setIsDirector }) => {
 
   const handleSend = async () => {
     if ((!input.trim() && !selectedImage) || isLoading) return;
+    
+    // API 키 가용성 확인
+    if (!isApiKeyAvailable()) {
+      const status = getApiKeyStatus();
+      alert(status.message);
+      return;
+    }
+    
     const base64Data = selectedImage?.split(',')[1];
     const userMsgText = input || (isDirector ? "이 감정의 조각을 해석해줘." : "누쿠앤코의 제안을 듣고 싶어요.");
     setMessages(prev => [...prev, { role: 'user', text: userMsgText, image: selectedImage || undefined }]);

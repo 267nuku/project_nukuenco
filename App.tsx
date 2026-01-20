@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import AIStylist from './components/AIStylist';
 import { PRODUCTS as INITIAL_PRODUCTS } from './constants';
-import { generateFashionImage } from './services/geminiService';
+import { generateFashionImage, getApiKeyStatus } from './services/geminiService';
 import { Product } from './types';
 
 interface ExtendedProduct extends Product {
@@ -210,6 +210,14 @@ const App: React.FC = () => {
       setProducts(INITIAL_PRODUCTS); 
       setWeeklyObject(prev => ({ ...prev, image: DEFAULT_MOON_JAR }));
     }
+    
+    // API 키 로드 상태 로깅
+    const apiStatus = getApiKeyStatus();
+    console.log('🎨 Mori Concierge API Status:', apiStatus);
+    if (!apiStatus.available) {
+      console.warn('⚠️ ', apiStatus.message);
+    }
+    
     setIsLoaded(true);
     refreshReveal();
   }, [refreshReveal, showToast]);

@@ -2,7 +2,33 @@
 import { GoogleGenAI } from "@google/genai";
 
 // Use the system-provided API key directly
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+const getAI = () => {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('VITE_GEMINI_API_KEY 환경 변수가 설정되지 않았습니다.');
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
+// API 키 가용성 확인
+export const isApiKeyAvailable = (): boolean => {
+  return !!import.meta.env.VITE_GEMINI_API_KEY;
+};
+
+// API 키 상태 진단
+export const getApiKeyStatus = (): { available: boolean; message: string } => {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    return {
+      available: false,
+      message: 'API 키가 설정되지 않았습니다. 환경 변수를 확인해주세요.'
+    };
+  }
+  return {
+    available: true,
+    message: 'API 준비 완료'
+  };
+};
 
 export const getFashionAdvice = async (userMessage: string, imageBase64?: string, isDirector: boolean = true) => {
   const ai = getAI();
