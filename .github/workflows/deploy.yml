@@ -33,7 +33,7 @@ jobs:
       - name: Build app
         run: npm run build
         env: # <--- 이 부분을 추가해야 합니다
-          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          VITE_GEMINI_API_KEY: "AIzaSyD-PYMrdgccOwDVxqWDkcbZdmuFY22D5Bo"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
