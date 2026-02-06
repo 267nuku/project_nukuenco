@@ -59,7 +59,8 @@ export const getFashionAdvice = async (userMessage: string, imageBase64?: string
     사용자가 질문하면 답변 마지막에 반드시 [VISUAL_PROMPT: <detailed English visual description>] 형식으로 이미지를 생성하기 위한 영어 프롬프트를 포함시켜 주세요.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      // model: 'gemini-3-pro-preview',
+      model: 'gemini-2.5-flash-image',
       contents: { parts },
       config: {
         systemInstruction: systemInstruction,
