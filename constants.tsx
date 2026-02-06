@@ -47,8 +47,9 @@ export const PRODUCTS: Product[] = [
     subtitle: '935 뽕잎크림수: 맑고 투명한 정화',
     price: '₩49,000',
     category: 'Skincare',
-    image: 'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/unnamed%20(67).jpg',
+    image: 'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/11_kissingkura.jpg',
     detailImages: [
+      'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/11_kissingkura.jpg',
       'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/unnamed%20(65).jpg',
       'https://raw.githubusercontent.com/267nuku/nukuenco_test/main/images/unnamed%20(66).jpg'
     ],
