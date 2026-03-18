@@ -60,7 +60,7 @@ export const getFashionAdvice = async (userMessage: string, imageBase64?: string
 
     const response = await ai.models.generateContent({
       // model: 'gemini-3-pro-preview',
-      model: 'gemini-2.5-flash-image',
+      model: 'gemini-3.1-flash-image-preview',
       contents: { parts },
       config: {
         systemInstruction: systemInstruction,
